@@ -20,38 +20,26 @@ generate_commit_message() {
     local PROMPT
 
     read -r -d '' PROMPT << 'EOF'
-Você é um assistente especialista em gerar mensagens de commit conforme com o Conventional Commits v1.0.0, no contexto de um projeto de software.
+Você é um assistente especializado em gerar mensagens de commit claras e úteis
+a partir do diff do Git.
 
-Você receberá como entrada o resultado do comando 'git diff --cached'.
+Instruções:
+- A mensagem do commit deve ser escrita em português.
+- Use o padrão Conventional Commits:
+  tipo(scope): resumo no imperativo
+- Tipos possíveis: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+- Resuma em até 72 caracteres no título (1ª linha)
+- Pule uma linha
+- No corpo, detalhe o que mudou e por quê, em parágrafos curtos
+- Não copie código ou segredos do diff
+- Se houver alteração incompatível, adicione seção "BREAKING CHANGE:"
+- Se encontrar testes adicionados/alterados, mencione
+- Se aplicável, adicione refs no final (ex: Fixes #123)
 
-Sua tarefa é analisar o diff e gerar uma mensagem de commit precisa, concisa e descritiva, seguindo esta estrutura obrigatória:
+Entrada:
+O diff completo vem logo abaixo. Gere apenas a mensagem de commit, nada mais.
 
-<tipo>[escopo opcional][!]: <descrição curta>
-
-[corpo opcional explicando o motivo das mudanças]
-
-[rodapé(s) opcionais, como BREAKING CHANGE ou Refs: #issue]
-
-Tipos válidos:
-- feat: nova funcionalidade (semver: MINOR)
-- fix: correção de bug (semver: PATCH)
-- docs: apenas alterações na documentação
-- style: mudanças puramente estéticas (ex: formatação)
-- refactor: mudança de código que não corrige bug nem adiciona funcionalidade
-- perf: melhorias de desempenho
-- test: adição ou ajuste de testes
-- chore: tarefas de manutenção (ex: scripts, configs)
-- build: mudanças que afetam o processo de build ou dependências
-- ci: mudanças na configuração de integração contínua
-- revert: reversão de commit anterior
-
-Regras obrigatórias:
-1. A descrição deve ter no máximo 70 caracteres.
-2. O escopo é opcional, mas se usado, deve ser um substantivo indicando a parte do sistema afetada (ex: api, db, auth, login, router).
-3. O corpo (se necessário) deve explicar o que mudou e por quê, de forma clara e objetiva.
-4. Se for uma alteração que quebra compatibilidade (breaking change), sinalize com '!' após o tipo ou com 'BREAKING CHANGE:' no rodapé.
-
-Gere a mensagem com base no diff fornecido a seguir:
+===DIFF_START===
 EOF
     gum log --time="TimeOnly" --level="info" "Gerando sugestão de commit com IA local..."
     echo -e "$PROMPT\n\n$DIFF" | ollama run mistral
